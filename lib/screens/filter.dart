@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:internshala/screens/city_selection_screen.dart';
 import 'package:internshala/screens/profile_section_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class FilterScreen extends StatefulWidget {
   final Map<String, dynamic>? initialFilters;
@@ -65,12 +66,16 @@ class _FilterScreenState extends State<FilterScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Filters'),
+        backgroundColor: Colors.white,
         actions: [
           IconButton(icon: const Icon(Icons.bookmark_border), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.notifications_none), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.chat_bubble_outline), onPressed: () {}),
+          IconButton(
+              icon: const Icon(Icons.notifications_none), onPressed: () {}),
+          IconButton(
+              icon: const Icon(Icons.chat_bubble_outline), onPressed: () {}),
         ],
       ),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -103,7 +108,8 @@ class _FilterScreenState extends State<FilterScreen> {
                 ),
               ListTile(
                 leading: const Icon(Icons.add, color: Colors.blue),
-                title: const Text('Add profile', style: TextStyle(color: Colors.blue)),
+                title: const Text('Add profile',
+                    style: TextStyle(color: Colors.blue)),
                 onTap: () => _navigateToProfileSelection(context),
               ),
               const Text('CITY', style: TextStyle(color: Colors.grey)),
@@ -132,12 +138,14 @@ class _FilterScreenState extends State<FilterScreen> {
                 ),
               ListTile(
                 leading: const Icon(Icons.add, color: Colors.blue),
-                title: const Text('Add city', style: TextStyle(color: Colors.blue)),
+                title: const Text('Add city',
+                    style: TextStyle(color: Colors.blue)),
                 onTap: () {
                   _navigateToCitySelection(context);
                 },
               ),
-              const Text('INTERNSHIP TYPE', style: TextStyle(color: Colors.grey)),
+              const Text('INTERNSHIP TYPE',
+                  style: TextStyle(color: Colors.grey)),
               CheckboxListTile(
                 title: const Text('Work from home'),
                 value: workFromHome,
@@ -148,23 +156,56 @@ class _FilterScreenState extends State<FilterScreen> {
                   });
                 },
               ),
-              const Text('Maximum Duration', style: TextStyle(color: Colors.grey)),
-              DropdownButton<String>(
-                hint: const Text('Choose duration'),
-                value: selectedDuration,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedDuration = newValue;
-                    _saveSelectedFilters();
-                  });
-                },
-                items: <String>['1 Month', '2 Months', '3 Months', '4 Months', '6 Months', '12 Months', '24 Months', '36 Months']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+              "Maximum Duration".text.gray400.lg.make(),
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
+                width: MediaQuery.sizeOf(context)
+                    .width, // Adjusts to the full width of the screen
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 12.0,
+                    vertical: 4.0), // Adds padding around the dropdown
+                decoration: BoxDecoration(
+                  color: Colors.white, // Background color for the dropdown
+                  borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                  border: Border.all(
+                    color: Colors.grey, // Grey border color
+                    width: 1.0, // Border width
+                  ),
+                ),
+                child: DropdownButton<String>(
+                  isExpanded:
+                      true, // Ensures the dropdown takes up the full width
+                  underline: const SizedBox(), // Removes the default underline
+                  hint: Text(
+                    'Choose duration',
+                    style:
+                        TextStyle(color: Colors.grey[400]), // Hint text color
+                  ),
+                  value: selectedDuration,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedDuration = newValue;
+                      _saveSelectedFilters();
+                    });
+                  },
+                  items: <String>[
+                    '1 Month',
+                    '2 Months',
+                    '3 Months',
+                    '4 Months',
+                    '6 Months',
+                    '12 Months',
+                    '24 Months',
+                    '36 Months'
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
               ),
               if (selectedDuration != null)
                 Padding(
@@ -207,7 +248,9 @@ class _FilterScreenState extends State<FilterScreen> {
   void _navigateToProfileSelection(BuildContext context) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ProfileSelectionScreen(selectedProfiles: selectedProfiles)),
+      MaterialPageRoute(
+          builder: (context) =>
+              ProfileSelectionScreen(selectedProfiles: selectedProfiles)),
     );
     if (result != null) {
       setState(() {
@@ -220,7 +263,9 @@ class _FilterScreenState extends State<FilterScreen> {
   void _navigateToCitySelection(BuildContext context) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CitySelectionScreen(selectedCities: selectedCities)),
+      MaterialPageRoute(
+          builder: (context) =>
+              CitySelectionScreen(selectedCities: selectedCities)),
     );
     if (result != null) {
       setState(() {

@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_string_interpolations, avoid_print, unused_element
 
 import 'dart:convert';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -17,13 +18,12 @@ class AllInternships extends StatefulWidget {
   State<AllInternships> createState() => _AllInternshipsState();
 }
 
-
 class _AllInternshipsState extends State<AllInternships> {
   late Future<List<Internship>> futureInternships;
   bool? workFromHomeFilter;
   List<String>? cityFilter;
   bool? partTimeFilter;
-String? durationFilter;
+  String? durationFilter;
 
   @override
   void initState() {
@@ -31,14 +31,14 @@ String? durationFilter;
     futureInternships = fetchInternships();
   }
 
- Future<void> _applyFilters() async {
+  Future<void> _applyFilters() async {
     final filters = await Get.to(() => FilterScreen(
-      initialFilters: {
-        'selectedCities': cityFilter,
-        'workFromHome': workFromHomeFilter,
-        'selectedDuration': durationFilter,
-      },
-    ));
+          initialFilters: {
+            'selectedCities': cityFilter,
+            'workFromHome': workFromHomeFilter,
+            'selectedDuration': durationFilter,
+          },
+        ));
 
     if (filters != null) {
       setState(() {
@@ -48,55 +48,111 @@ String? durationFilter;
       });
     }
   }
-    List<Internship> _filterInternships(List<Internship> internships) {
+
+  int get selectedFiltersCount {
+    int count = 0;
+    if (workFromHomeFilter != null && workFromHomeFilter!) count++;
+    if (cityFilter != null && cityFilter!.isNotEmpty)
+      count += cityFilter!.length;
+    if (durationFilter != null) count++;
+    return count;
+  }
+
+  List<Internship> _filterInternships(List<Internship> internships) {
     return internships.where((internship) {
-      final matchWorkFromHome = workFromHomeFilter == null || internship.workFromHome == workFromHomeFilter;
-      final matchCity = cityFilter == null || cityFilter!.isEmpty || internship.locationNames.any((location) => cityFilter!.contains(location));
-      final matchDuration = durationFilter == null || internship.duration == durationFilter;
+      final matchWorkFromHome = workFromHomeFilter == null ||
+          internship.workFromHome == workFromHomeFilter;
+      final matchCity = cityFilter == null ||
+          cityFilter!.isEmpty ||
+          internship.locationNames
+              .any((location) => cityFilter!.contains(location));
+      final matchDuration =
+          durationFilter == null || internship.duration == durationFilter;
 
       return matchWorkFromHome && matchCity && matchDuration;
     }).toList();
   }
 
 Widget _buildActiveFilters() {
-    return Wrap(
-      spacing: 8.0,
-      children: [
-        if (workFromHomeFilter != null && workFromHomeFilter!)
-          Chip(
-            label: Text('Work from Home'),
-            onDeleted: () {
-              setState(() {
-                workFromHomeFilter = null;
-              });
-            },
-          ),
-        if (cityFilter != null)
-          for (var city in cityFilter!)
-            Chip(
-              label: Text(city),
-              onDeleted: () {
-                setState(() {
-                  cityFilter!.remove(city);
-                  if (cityFilter!.isEmpty) {
-                    cityFilter = null;
-                  }
-                });
-              },
+  return Wrap(
+    spacing: 8.0,
+    children: [
+      if (workFromHomeFilter != null && workFromHomeFilter!)
+        Chip(
+          label:  Text(
+            'Work from Home',
+            style: TextStyle(
+              color: Colors.grey[700], // Dark grey text color
+              fontSize: 12.0, // Smaller text size
             ),
-        if (durationFilter != null)
+          ),
+          deleteIconColor: Colors.grey[700], // Dark grey delete icon color
+          backgroundColor: Colors.white, // White background color
+          shape: const StadiumBorder(
+            side: BorderSide(
+              color: Colors.grey, // Grey border color
+              width: 0.5, // Thinner border
+            ),
+          ),
+          onDeleted: () {
+            setState(() {
+              workFromHomeFilter = null;
+            });
+          },
+        ),
+      if (cityFilter != null)
+        for (var city in cityFilter!)
           Chip(
-            label: Text(durationFilter!),
+            label: Text(
+              city,
+              style: TextStyle(
+                color: Colors.grey[700], // Dark grey text color
+                fontSize: 12.0, // Smaller text size
+              ),
+            ),
+            deleteIconColor: Colors.grey[700], // Dark grey delete icon color
+            backgroundColor: Colors.white, // White background color
+            shape: const StadiumBorder(
+              side: BorderSide(
+                color: Colors.grey, // Grey border color
+                width: 0.5, // Thinner border
+              ),
+            ),
             onDeleted: () {
               setState(() {
-                durationFilter = null;
+                cityFilter!.remove(city);
+                if (cityFilter!.isEmpty) {
+                  cityFilter = null;
+                }
               });
             },
           ),
-      ],
-    );
-  }
-
+      if (durationFilter != null)
+        Chip(
+          label: Text(
+            durationFilter!,
+            style: TextStyle(
+              color: Colors.grey[700], // Dark grey text color
+              fontSize: 12.0, // Smaller text size
+            ),
+          ),
+          deleteIconColor: Colors.grey[700], // Dark grey delete icon color
+          backgroundColor: Colors.white, // White background color
+          shape: const StadiumBorder(
+            side: BorderSide(
+              color: Colors.grey, // Grey border color
+              width: 0.5, // Thinner border
+            ),
+          ),
+          onDeleted: () {
+            setState(() {
+              durationFilter = null;
+            });
+          },
+        ),
+    ],
+  );
+}
 
 
   Widget _buildFilterChip(String label, VoidCallback onDeleted) {
@@ -111,7 +167,7 @@ Widget _buildActiveFilters() {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: "Internships".text.bold.make(),
+        title: const Text("Internships"),
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
       ),
@@ -119,19 +175,73 @@ Widget _buildActiveFilters() {
         children: [
           Container(
             color: Colors.white,
-            width: double.infinity,
-            child: Center(
-              child: ElevatedButton(
-                onPressed: _applyFilters,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: _applyFilters,
+                  child: Container(
+                    height: 30,
+                    width: selectedFiltersCount > 0
+                        ? 80
+                        : 80, // Adjust width based on filters
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                          color: Colors.blue, width: 2), // Blue border
+                    ),
+                    child: Stack(
+                      alignment: selectedFiltersCount > 0
+                          ? Alignment.centerLeft
+                          : Alignment.center, // Center the text and the avatar
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: selectedFiltersCount > 0 ? 10 : 0,
+                          ),
+                          child: const Text(
+                            "Filter",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ),
+                        if (selectedFiltersCount >
+                            0) // Show CircleAvatar only if filters are selected
+                          Positioned(
+                            right:
+                                4, // Position the avatar inside the container
+                            child: CircleAvatar(
+                              backgroundColor: Colors.blue,
+                              radius: 10, // Adjust size as needed
+                              child: Text(
+                                selectedFiltersCount.toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                ), // White text inside CircleAvatar
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
-                child: "Filter".text.blue400.make(),
-              ),
+                const SizedBox(
+                    width: 8), // Space between Filter button and filters
+                // Active Filters
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: _buildActiveFilters(),
+                  ),
+                ),
+                const SizedBox(
+                    width: 8), // Space between filters and CircleAvatar
+                // Conditional CircleAvatar to show selected filters count
+              ],
             ),
           ),
           const SizedBox(height: 10),
-          _buildActiveFilters(), // Display active filters
           Expanded(
             child: FutureBuilder<List<Internship>>(
               future: futureInternships,
@@ -141,7 +251,8 @@ Widget _buildActiveFilters() {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (snapshot.hasData) {
-                  final filteredInternships = _filterInternships(snapshot.data!);
+                  final filteredInternships =
+                      _filterInternships(snapshot.data!);
 
                   if (filteredInternships.isEmpty) {
                     return const Center(child: Text('No internships found.'));
@@ -163,7 +274,8 @@ Widget _buildActiveFilters() {
         ],
       ),
     );
-  }}
+  }
+}
 
 class InternshipCard extends StatelessWidget {
   final Internship internship;
@@ -314,6 +426,7 @@ class InternshipCard extends StatelessWidget {
     );
   }
 }
+
 Future<List<Internship>> fetchInternships() async {
   final url = Uri.parse('https://internshala.com/flutter_hiring/search');
   try {
