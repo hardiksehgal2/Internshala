@@ -477,7 +477,6 @@ class Internship {
   String get duration => data['duration'] ?? 'N/A';
 
   String get stipendAmount => data['stipend']['salary'] ?? 'N/A';
-  // String get stipendType => data['stipend']['scale'] ?? 'N/A';
 
   List<String> get locationNames =>
       List<String>.from(data['location_names'] ?? []);

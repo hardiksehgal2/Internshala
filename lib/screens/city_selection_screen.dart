@@ -91,7 +91,7 @@ class _CitySelectionScreenState extends State<CitySelectionScreen> {
           ),
           if (selectedCities.isNotEmpty)
             Container(
-              height: 40, // Decreased height
+              height: 40, 
               padding: const EdgeInsets.symmetric(vertical: 4.0,horizontal: 19),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
@@ -100,7 +100,6 @@ class _CitySelectionScreenState extends State<CitySelectionScreen> {
                   return Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: Container(
-                      // padding: const EdgeInsets.symmetric(horizontal: 8.0), 
                       decoration: BoxDecoration(
                         color: Colors.blue,
                         borderRadius: BorderRadius.circular(8.0),

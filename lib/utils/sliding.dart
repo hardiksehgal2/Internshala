@@ -25,7 +25,7 @@ class _Sliding1State extends State<Sliding1> {
   @override
   void initState() {
     super.initState();
-    _getIsOpenStatus(); // Get the stored isOpen value on startup
+    _getIsOpenStatus(); 
   }
 
   Future<void> _getIsOpenStatus() async {
@@ -131,7 +131,7 @@ class _Sliding1State extends State<Sliding1> {
                     const SizedBox(height: 35),
                     GestureDetector(
                       onTap: () async {
-                        await _setIsOpenStatus(); // Set isOpen to true
+                        await _setIsOpenStatus(); 
                         Get.to(() => const AllInternships(),
                             transition: Transition.circularReveal,
                             duration: const Duration(milliseconds: 1000));
@@ -167,7 +167,7 @@ class _Sliding1State extends State<Sliding1> {
         child: FloatingActionButton(
           onPressed: () async {
             if (currentIndex == onBoardingItems.length - 1) {
-              await _setIsOpenStatus(); // Set isOpen to true
+              await _setIsOpenStatus();
               Get.to(() => const AllInternships(),
                   transition: Transition.circularReveal,
                   duration: const Duration(milliseconds: 1000));

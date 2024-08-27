@@ -36,7 +36,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Show your welcome animation or splash screen here while checking `isOpen`.
     return Scaffold(
       body: Center(
         child:Lottie.asset(
