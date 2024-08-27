@@ -24,6 +24,9 @@ class _AllInternshipsState extends State<AllInternships> {
   List<String>? cityFilter;
   bool? partTimeFilter;
   String? durationFilter;
+  List<String>? profileFilter;
+  int totalInternships = 0;
+  List<Internship>? allInternships;
 
   @override
   void initState() {
@@ -34,6 +37,7 @@ class _AllInternshipsState extends State<AllInternships> {
   Future<void> _applyFilters() async {
     final filters = await Get.to(() => FilterScreen(
           initialFilters: {
+            'selectedProfiles': profileFilter,
             'selectedCities': cityFilter,
             'workFromHome': workFromHomeFilter,
             'selectedDuration': durationFilter,
@@ -42,15 +46,19 @@ class _AllInternshipsState extends State<AllInternships> {
 
     if (filters != null) {
       setState(() {
+        profileFilter = filters['selectedProfiles'] as List<String>?;
         workFromHomeFilter = filters['workFromHome'] as bool?;
         cityFilter = filters['selectedCities'] as List<String>?;
         durationFilter = filters['selectedDuration'] as String?;
       });
+      _updateFilteredInternships();
     }
   }
 
   int get selectedFiltersCount {
     int count = 0;
+    if (profileFilter != null && profileFilter!.isNotEmpty)
+      count += profileFilter!.length;
     if (workFromHomeFilter != null && workFromHomeFilter!) count++;
     if (cityFilter != null && cityFilter!.isNotEmpty)
       count += cityFilter!.length;
@@ -58,8 +66,19 @@ class _AllInternshipsState extends State<AllInternships> {
     return count;
   }
 
+  void _updateFilteredInternships() {
+    if (allInternships != null) {
+      setState(() {
+        totalInternships = _filterInternships(allInternships!).length;
+      });
+    }
+  }
+
   List<Internship> _filterInternships(List<Internship> internships) {
     return internships.where((internship) {
+      final matchProfile = profileFilter == null ||
+          profileFilter!.isEmpty ||
+          profileFilter!.contains(internship.profileName);
       final matchWorkFromHome = workFromHomeFilter == null ||
           internship.workFromHome == workFromHomeFilter;
       final matchCity = cityFilter == null ||
@@ -69,99 +88,84 @@ class _AllInternshipsState extends State<AllInternships> {
       final matchDuration =
           durationFilter == null || internship.duration == durationFilter;
 
-      return matchWorkFromHome && matchCity && matchDuration;
+      return matchProfile && matchWorkFromHome && matchCity && matchDuration;
     }).toList();
   }
 
-Widget _buildActiveFilters() {
-  return Wrap(
-    spacing: 8.0,
-    children: [
-      if (workFromHomeFilter != null && workFromHomeFilter!)
-        Chip(
-          label:  Text(
-            'Work from Home',
-            style: TextStyle(
-              color: Colors.grey[700],
-              fontSize: 12.0, 
-            ),
-          ),
-          deleteIconColor: Colors.grey[700],
-          backgroundColor: Colors.white,
-          shape: const StadiumBorder(
-            side: BorderSide(
-              color: Colors.grey,
-              width: 0.5, 
-            ),
-          ),
-          onDeleted: () {
-            setState(() {
-              workFromHomeFilter = null;
-            });
-          },
-        ),
-      if (cityFilter != null)
-        for (var city in cityFilter!)
-          Chip(
-            label: Text(
-              city,
-              style: TextStyle(
-                color: Colors.grey[700], 
-                fontSize: 12.0,
-              ),
-            ),
-            deleteIconColor: Colors.grey[700], 
-            backgroundColor: Colors.white, 
-            shape: const StadiumBorder(
-              side: BorderSide(
-                color: Colors.grey, 
-                width: 0.5, 
-              ),
-            ),
-            onDeleted: () {
+  Widget _buildActiveFilters() {
+    return Wrap(
+      spacing: 8.0,
+      runSpacing: 0,
+      children: [
+        if (profileFilter != null)
+          for (var profile in profileFilter!)
+            _buildFilterChip(profile, () {
+              setState(() {
+                profileFilter!.remove(profile);
+                if (profileFilter!.isEmpty) {
+                  profileFilter = null;
+                }
+              });
+              _updateFilteredInternships();
+            }),
+        if (cityFilter != null)
+          for (var city in cityFilter!)
+            _buildFilterChip(city, () {
               setState(() {
                 cityFilter!.remove(city);
                 if (cityFilter!.isEmpty) {
                   cityFilter = null;
                 }
               });
-            },
-          ),
-      if (durationFilter != null)
-        Chip(
-          label: Text(
-            durationFilter!,
-            style: TextStyle(
-              color: Colors.grey[700],
-              fontSize: 12.0,
-            ),
-          ),
-          deleteIconColor: Colors.grey[700], 
-          backgroundColor: Colors.white, 
-          shape: const StadiumBorder(
-            side: BorderSide(
-              color: Colors.grey, 
-              width: 0.5, 
-            ),
-          ),
-          onDeleted: () {
+              _updateFilteredInternships();
+            }),
+        if (durationFilter != null)
+          _buildFilterChip(durationFilter!, () {
             setState(() {
               durationFilter = null;
             });
-          },
+            _updateFilteredInternships();
+          }),
+        if (workFromHomeFilter != null && workFromHomeFilter!)
+          _buildFilterChip("Work from Home", () {
+            setState(() {
+              workFromHomeFilter = null;
+            });
+            _updateFilteredInternships();
+          }),
+      ],
+    );
+  }
+
+Widget _buildFilterChip(String label, VoidCallback onDeleted) {
+  return Container(
+    margin: const EdgeInsets.only(right: 8),
+    child: Chip(
+      label: Text(
+        label,
+        style: const TextStyle(
+          color: Colors.grey,
+          fontSize: 12,
         ),
-    ],
+      ),
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30), 
+        side: const BorderSide(color: Colors.grey), 
+      ),
+      deleteIcon: const Icon(
+        Icons.clear,
+        size: 16,
+        color: Colors.grey,
+      ),
+      onDeleted: onDeleted,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      labelPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0), 
+    ),
   );
 }
 
-
-  Widget _buildFilterChip(String label, VoidCallback onDeleted) {
-    return Chip(
-      label: Text(label),
-      onDeleted: onDeleted,
-      deleteIcon: const Icon(Icons.clear),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,14 +186,11 @@ Widget _buildActiveFilters() {
                   onTap: _applyFilters,
                   child: Container(
                     height: 30,
-                    width: selectedFiltersCount > 0
-                        ? 80
-                        : 80,
+                    width: 80,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                          color: Colors.blue, width: 2),
+                      border: Border.all(color: Colors.blue, width: 2),
                     ),
                     child: Stack(
                       alignment: selectedFiltersCount > 0
@@ -205,11 +206,9 @@ Widget _buildActiveFilters() {
                             style: TextStyle(color: Colors.blue),
                           ),
                         ),
-                        if (selectedFiltersCount >
-                            0)
+                        if (selectedFiltersCount > 0)
                           Positioned(
-                            right:
-                                4, 
+                            right: 4,
                             child: CircleAvatar(
                               backgroundColor: Colors.blue,
                               radius: 10,
@@ -218,7 +217,7 @@ Widget _buildActiveFilters() {
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 10,
-                                ), 
+                                ),
                               ),
                             ),
                           ),
@@ -226,20 +225,16 @@ Widget _buildActiveFilters() {
                     ),
                   ),
                 ),
-                const SizedBox(
-                    width: 8),
+                const SizedBox(width: 8),
                 Expanded(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: _buildActiveFilters(),
                   ),
                 ),
-                const SizedBox(
-                    width: 8), 
               ],
             ),
           ),
-          const SizedBox(height: 10),
           Expanded(
             child: FutureBuilder<List<Internship>>(
               future: futureInternships,
@@ -249,8 +244,17 @@ Widget _buildActiveFilters() {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (snapshot.hasData) {
+                  allInternships = snapshot.data;
                   final filteredInternships =
-                      _filterInternships(snapshot.data!);
+                      _filterInternships(allInternships!);
+
+                  if (totalInternships == 0) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      setState(() {
+                        totalInternships = filteredInternships.length;
+                      });
+                    });
+                  }
 
                   if (filteredInternships.isEmpty) {
                     return const Center(child: Text('No internships found.'));
@@ -331,11 +335,10 @@ class InternshipCard extends StatelessWidget {
                   width: 200,
                   child: Row(
                     children: [
-                      internship.jobTitle.text.bold.xl.make().expand(),
+                      internship.profileName.text.bold.xl.make().expand(),
                     ],
                   ),
                 ),
-                
               ],
             ),
             subtitle: Column(
@@ -466,7 +469,7 @@ class Internship {
     return Internship(data: json);
   }
 
-  String get jobTitle => data['title'] ?? 'No Title';
+  String get profileName => data['profile_name'] ?? 'No Title';
   String get companyName => data['company_name'] ?? 'No Company Name';
   String get employmentType => data['employment_type'] ?? 'N/A';
   bool get workFromHome => data['work_from_home'] ?? false;

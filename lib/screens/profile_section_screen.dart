@@ -11,6 +11,7 @@ class ProfileSelectionScreen extends StatefulWidget {
 
 class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
   List<String> profiles = [
+    'Data Science',
     '.NET Development', '3D Printing', 'ASP.NET Development', 'Accounts', 'Acting',
     'Aerospace Engineering', 'Agriculture & Food Engineering', 'Analytics', 'Anchoring',
     'Android App Development', 'Angular.js Development', 'Animation', 'Architecture',

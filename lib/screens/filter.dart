@@ -54,17 +54,14 @@ class _FilterScreenState extends State<FilterScreen> {
     await prefs.setString('selectedDuration', selectedDuration ?? '');
   }
 
-  void _applyFilters() {
-    if (_validateFilters()) {
-      Navigator.pop(context, {
-        'selectedProfiles': selectedProfiles,
-        'selectedCities': selectedCities,
-        'workFromHome': workFromHome,
-        'selectedDuration': selectedDuration,
-      });
-    }
+void _applyFilters() {
+    Navigator.pop(context, {
+      'selectedProfiles': selectedProfiles,
+      'selectedCities': selectedCities,
+      'workFromHome': workFromHome,
+      'selectedDuration': selectedDuration,
+    });
   }
-
   bool _validateFilters() {
     if (selectedProfiles.isEmpty &&
         selectedCities.isEmpty &&
@@ -108,9 +105,10 @@ class _FilterScreenState extends State<FilterScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('PROFILE', style: TextStyle(color: Colors.grey)),
-               SizedBox(height: 16,),
-
-               if (selectedProfiles.isNotEmpty)
+              SizedBox(
+                height: 16,
+              ),
+              if (selectedProfiles.isNotEmpty)
                 Container(
                   height: 40,
                   child: ListView.builder(
@@ -131,11 +129,13 @@ class _FilterScreenState extends State<FilterScreen> {
                                 padding: const EdgeInsets.only(left: 8.0),
                                 child: Text(
                                   selectedProfiles[index],
-                                  style: const TextStyle(color: Colors.white, fontSize: 14.0),
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 14.0),
                                 ),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.close, color: Colors.white, size: 18),
+                                icon: const Icon(Icons.close,
+                                    color: Colors.white, size: 18),
                                 onPressed: () {
                                   setState(() {
                                     selectedProfiles.removeAt(index);
@@ -156,9 +156,14 @@ class _FilterScreenState extends State<FilterScreen> {
                     style: TextStyle(color: Colors.blue)),
                 onTap: () => _navigateToProfileSelection(context),
               ),
+              SizedBox(
+                height: 16,
+              ),
               const Text('CITY', style: TextStyle(color: Colors.grey)),
-               if (selectedCities.isNotEmpty)
-               SizedBox(height: 16,),
+              SizedBox(
+                height: 16,
+              ),
+              if (selectedCities.isNotEmpty)
                 Container(
                   height: 40,
                   child: ListView.builder(
@@ -179,11 +184,13 @@ class _FilterScreenState extends State<FilterScreen> {
                                 padding: const EdgeInsets.only(left: 8.0),
                                 child: Text(
                                   selectedCities[index],
-                                  style: const TextStyle(color: Colors.white, fontSize: 14.0),
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 14.0),
                                 ),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.close, color: Colors.white, size: 18),
+                                icon: const Icon(Icons.close,
+                                    color: Colors.white, size: 18),
                                 onPressed: () {
                                   setState(() {
                                     selectedCities.removeAt(index);

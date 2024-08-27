@@ -4,19 +4,29 @@ import 'package:flutter_svg/flutter_svg.dart';
 class CustomContainer extends StatelessWidget {
   final String text;
   final String? svgPath;
-  final Color containerColor;
-  final Color textColor;
 
   const CustomContainer({
     Key? key,
     required this.text,
     this.svgPath,
-    this.containerColor = const Color.fromARGB(255, 228, 227, 227),
-    this.textColor = const Color.fromARGB(255, 65, 65, 65),
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Color containerColor;
+    Color textColor;
+
+    if (text == 'Today') {
+      containerColor = Colors.lightGreen.shade100;
+      textColor = Colors.green.shade700;
+    } else if (RegExp(r'^[1-5]').hasMatch(text)) {
+      containerColor = Colors.lightBlue.shade100;
+      textColor = Colors.blue.shade700;
+    } else {
+      containerColor = const Color.fromARGB(255, 228, 227, 227);
+      textColor = const Color.fromARGB(255, 65, 65, 65);
+    }
+
     return IntrinsicWidth(
       child: Container(
         height: 25,
@@ -35,6 +45,7 @@ class CustomContainer extends StatelessWidget {
                 svgPath!,
                 height: 15,
                 width: 15,
+                color: textColor,
               ),
             if (svgPath != null)
               SizedBox(width: 5),
