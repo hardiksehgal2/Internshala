@@ -108,7 +108,9 @@ class _FilterScreenState extends State<FilterScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('PROFILE', style: TextStyle(color: Colors.grey)),
-              if (selectedProfiles.isNotEmpty)
+               SizedBox(height: 16,),
+
+               if (selectedProfiles.isNotEmpty)
                 Container(
                   height: 40,
                   child: ListView.builder(
@@ -117,15 +119,32 @@ class _FilterScreenState extends State<FilterScreen> {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.only(right: 8.0),
-                        child: Chip(
-                          label: Text(selectedProfiles[index]),
-                          deleteIcon: const Icon(Icons.close),
-                          onDeleted: () {
-                            setState(() {
-                              selectedProfiles.removeAt(index);
-                              _saveSelectedFilters();
-                            });
-                          },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade400,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  selectedProfiles[index],
+                                  style: const TextStyle(color: Colors.white, fontSize: 14.0),
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.close, color: Colors.white, size: 18),
+                                onPressed: () {
+                                  setState(() {
+                                    selectedProfiles.removeAt(index);
+                                    _saveSelectedFilters();
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -138,7 +157,8 @@ class _FilterScreenState extends State<FilterScreen> {
                 onTap: () => _navigateToProfileSelection(context),
               ),
               const Text('CITY', style: TextStyle(color: Colors.grey)),
-              if (selectedCities.isNotEmpty)
+               if (selectedCities.isNotEmpty)
+               SizedBox(height: 16,),
                 Container(
                   height: 40,
                   child: ListView.builder(
@@ -147,15 +167,32 @@ class _FilterScreenState extends State<FilterScreen> {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.only(right: 8.0),
-                        child: Chip(
-                          label: Text(selectedCities[index]),
-                          deleteIcon: const Icon(Icons.close),
-                          onDeleted: () {
-                            setState(() {
-                              selectedCities.removeAt(index);
-                              _saveSelectedFilters();
-                            });
-                          },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade400,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  selectedCities[index],
+                                  style: const TextStyle(color: Colors.white, fontSize: 14.0),
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.close, color: Colors.white, size: 18),
+                                onPressed: () {
+                                  setState(() {
+                                    selectedCities.removeAt(index);
+                                    _saveSelectedFilters();
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -193,7 +230,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10.0),
                   border: Border.all(
-                    color: Colors.blue,
+                    color: Colors.blue.shade400,
                     width: 1.0,
                   ),
                 ),
@@ -241,7 +278,7 @@ class _FilterScreenState extends State<FilterScreen> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: Colors.blue,
+                              color: Colors.blue.shade400,
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
@@ -303,14 +340,14 @@ class _FilterScreenState extends State<FilterScreen> {
               child: Container(
                 height: 50,
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: Colors.blue.shade400,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: InkWell(
                   onTap: _applyFilters,
                   child: Center(
                     child: Text(
-                      'Apply now',
+                      'Apply',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
