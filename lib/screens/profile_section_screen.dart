@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class ProfileSelectionScreen extends StatefulWidget {
   final List<String> selectedProfiles;
 
-  const ProfileSelectionScreen({Key? key, required this.selectedProfiles}) : super(key: key);
+  const ProfileSelectionScreen({Key? key, required this.selectedProfiles})
+      : super(key: key);
 
   @override
   State<ProfileSelectionScreen> createState() => _ProfileSelectionScreenState();
@@ -11,13 +12,33 @@ class ProfileSelectionScreen extends StatefulWidget {
 
 class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
   List<String> profiles = [
+    '3D Printing',
+    'Accounts',
+    'Acting',
+    'Administration',
+    'Aerospace Engineering',
+    'Agriculture & Food Engineering',
+    'Analytics',
+    'Anchoring',
+    'Android App Development',
+    'Angular.js Development',
+    'Animation',
+    'Architecture',
+    'Artificial Intelligence (AI)',
+    'ASP.NET Development',
+    'Audio Making/Editing',
+    'Auditing',
+    'Automobile Engineering',
+    'Backend Development',
+    'Bank',
+    'Big Data',
+    'Bioinformatics',
+    'Biology',
+    'Brand Management',
+    'Business Analytics',
+    '.NET Development',
     'Data Science',
-    '.NET Development', '3D Printing', 'ASP.NET Development', 'Accounts', 'Acting',
-    'Aerospace Engineering', 'Agriculture & Food Engineering', 'Analytics', 'Anchoring',
-    'Android App Development', 'Angular.js Development', 'Animation', 'Architecture',
-    'Artificial Intelligence (AI)', 'Audio Making/Editing', 'Auditing',
-    'Automobile Engineering', 'Backend Development', 'Bank', 'Big Data', 'Bioinformatics',
-    'Biology'
+    'Product Management'
   ];
 
   List<String> selectedProfiles = [];
@@ -38,7 +59,8 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
         surfaceTintColor: Colors.white,
         actions: [
           TextButton(
-            child: const Text('Clear all', style: TextStyle(color: Colors.blue)),
+            child:
+                const Text('Clear all', style: TextStyle(color: Colors.blue)),
             onPressed: () {
               setState(() {
                 selectedProfiles.clear();
@@ -58,7 +80,9 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
                   color: Colors.blue.shade400,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: Center(child: const Text('Apply', style: TextStyle(color: Colors.white))),
+                child: Center(
+                    child: const Text('Apply',
+                        style: TextStyle(color: Colors.white))),
               ),
             ),
           ),
@@ -98,8 +122,9 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
           ),
           if (selectedProfiles.isNotEmpty)
             Container(
-              height: 40, 
-              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 19),
+              height: 40,
+              padding:
+                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 19),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: selectedProfiles.length,
@@ -119,11 +144,13 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
                             padding: const EdgeInsets.only(left: 8.0),
                             child: Text(
                               selectedProfiles[index],
-                              style: const TextStyle(color: Colors.white, fontSize: 14.0), 
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 14.0),
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.close, color: Colors.white, size: 18), 
+                            icon: const Icon(Icons.close,
+                                color: Colors.white, size: 18),
                             onPressed: () {
                               setState(() {
                                 selectedProfiles.removeAt(index);
@@ -143,7 +170,9 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
               itemBuilder: (context, index) {
                 final profile = profiles[index];
                 if (searchController.text.isNotEmpty &&
-                    !profile.toLowerCase().contains(searchController.text.toLowerCase())) {
+                    !profile
+                        .toLowerCase()
+                        .contains(searchController.text.toLowerCase())) {
                   return const SizedBox.shrink();
                 }
                 return CheckboxListTile(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:internshala/screens/all_intership.dart';
 import 'package:internshala/utils/sliding.dart';
+import 'package:internshala/welcome_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         // useMaterial3: true,
       ),
       // home:  AllInternships(),
-      home:  Sliding1(),
+      home:  WelcomeScreen(),
     );
   }
 }
