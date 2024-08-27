@@ -82,16 +82,16 @@ Widget _buildActiveFilters() {
           label:  Text(
             'Work from Home',
             style: TextStyle(
-              color: Colors.grey[700], // Dark grey text color
-              fontSize: 12.0, // Smaller text size
+              color: Colors.grey[700],
+              fontSize: 12.0, 
             ),
           ),
-          deleteIconColor: Colors.grey[700], // Dark grey delete icon color
-          backgroundColor: Colors.white, // White background color
+          deleteIconColor: Colors.grey[700],
+          backgroundColor: Colors.white,
           shape: const StadiumBorder(
             side: BorderSide(
-              color: Colors.grey, // Grey border color
-              width: 0.5, // Thinner border
+              color: Colors.grey,
+              width: 0.5, 
             ),
           ),
           onDeleted: () {
@@ -106,16 +106,16 @@ Widget _buildActiveFilters() {
             label: Text(
               city,
               style: TextStyle(
-                color: Colors.grey[700], // Dark grey text color
-                fontSize: 12.0, // Smaller text size
+                color: Colors.grey[700], 
+                fontSize: 12.0,
               ),
             ),
-            deleteIconColor: Colors.grey[700], // Dark grey delete icon color
-            backgroundColor: Colors.white, // White background color
+            deleteIconColor: Colors.grey[700], 
+            backgroundColor: Colors.white, 
             shape: const StadiumBorder(
               side: BorderSide(
-                color: Colors.grey, // Grey border color
-                width: 0.5, // Thinner border
+                color: Colors.grey, 
+                width: 0.5, 
               ),
             ),
             onDeleted: () {
@@ -132,16 +132,16 @@ Widget _buildActiveFilters() {
           label: Text(
             durationFilter!,
             style: TextStyle(
-              color: Colors.grey[700], // Dark grey text color
-              fontSize: 12.0, // Smaller text size
+              color: Colors.grey[700],
+              fontSize: 12.0,
             ),
           ),
-          deleteIconColor: Colors.grey[700], // Dark grey delete icon color
-          backgroundColor: Colors.white, // White background color
+          deleteIconColor: Colors.grey[700], 
+          backgroundColor: Colors.white, 
           shape: const StadiumBorder(
             side: BorderSide(
-              color: Colors.grey, // Grey border color
-              width: 0.5, // Thinner border
+              color: Colors.grey, 
+              width: 0.5, 
             ),
           ),
           onDeleted: () {
@@ -184,17 +184,17 @@ Widget _buildActiveFilters() {
                     height: 30,
                     width: selectedFiltersCount > 0
                         ? 80
-                        : 80, // Adjust width based on filters
+                        : 80,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                          color: Colors.blue, width: 2), // Blue border
+                          color: Colors.blue, width: 2),
                     ),
                     child: Stack(
                       alignment: selectedFiltersCount > 0
                           ? Alignment.centerLeft
-                          : Alignment.center, // Center the text and the avatar
+                          : Alignment.center,
                       children: [
                         Padding(
                           padding: EdgeInsets.only(
@@ -206,19 +206,19 @@ Widget _buildActiveFilters() {
                           ),
                         ),
                         if (selectedFiltersCount >
-                            0) // Show CircleAvatar only if filters are selected
+                            0)
                           Positioned(
                             right:
-                                4, // Position the avatar inside the container
+                                4, 
                             child: CircleAvatar(
                               backgroundColor: Colors.blue,
-                              radius: 10, // Adjust size as needed
+                              radius: 10,
                               child: Text(
                                 selectedFiltersCount.toString(),
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 10,
-                                ), // White text inside CircleAvatar
+                                ), 
                               ),
                             ),
                           ),
@@ -227,8 +227,7 @@ Widget _buildActiveFilters() {
                   ),
                 ),
                 const SizedBox(
-                    width: 8), // Space between Filter button and filters
-                // Active Filters
+                    width: 8),
                 Expanded(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
@@ -236,8 +235,7 @@ Widget _buildActiveFilters() {
                   ),
                 ),
                 const SizedBox(
-                    width: 8), // Space between filters and CircleAvatar
-                // Conditional CircleAvatar to show selected filters count
+                    width: 8), 
               ],
             ),
           ),
@@ -329,18 +327,22 @@ class InternshipCard extends StatelessWidget {
                     ),
                   ),
                 const SizedBox(height: 12),
-                Row(
-                  children: [
-                    internship.jobTitle.text.bold.xl.make().expand(),
-                  ],
+                SizedBox(
+                  width: 200,
+                  child: Row(
+                    children: [
+                      internship.jobTitle.text.bold.xl.make().expand(),
+                    ],
+                  ),
                 ),
+                
               ],
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 internship.companyName.text.gray400.make(),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 Row(
                   children: [
                     SvgPicture.asset(

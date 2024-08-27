@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:internshala/screens/city_selection_screen.dart';
 import 'package:internshala/screens/profile_section_screen.dart';
@@ -53,11 +55,34 @@ class _FilterScreenState extends State<FilterScreen> {
   }
 
   void _applyFilters() {
-    Navigator.pop(context, {
-      'selectedProfiles': selectedProfiles,
-      'selectedCities': selectedCities,
-      'workFromHome': workFromHome,
-      'selectedDuration': selectedDuration,
+    if (_validateFilters()) {
+      Navigator.pop(context, {
+        'selectedProfiles': selectedProfiles,
+        'selectedCities': selectedCities,
+        'workFromHome': workFromHome,
+        'selectedDuration': selectedDuration,
+      });
+    }
+  }
+
+  bool _validateFilters() {
+    if (selectedProfiles.isEmpty &&
+        selectedCities.isEmpty &&
+        selectedDuration == null &&
+        !workFromHome) {
+      VxToast.show(context, msg: "Please select at least one filter");
+      return false;
+    }
+    return true;
+  }
+
+  void _clearAllFilters() {
+    setState(() {
+      selectedProfiles.clear();
+      selectedCities.clear();
+      workFromHome = false;
+      selectedDuration = null;
+      _saveSelectedFilters();
     });
   }
 
@@ -161,85 +186,138 @@ class _FilterScreenState extends State<FilterScreen> {
                 height: 16,
               ),
               Container(
-                width: MediaQuery.sizeOf(context)
-                    .width, // Adjusts to the full width of the screen
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 12.0,
-                    vertical: 4.0), // Adds padding around the dropdown
+                width: MediaQuery.sizeOf(context).width,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
                 decoration: BoxDecoration(
-                  color: Colors.white, // Background color for the dropdown
-                  borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
                   border: Border.all(
-                    color: Colors.grey, // Grey border color
-                    width: 1.0, // Border width
+                    color: Colors.blue,
+                    width: 1.0,
                   ),
                 ),
-                child: DropdownButton<String>(
-                  isExpanded:
-                      true, // Ensures the dropdown takes up the full width
-                  underline: const SizedBox(), // Removes the default underline
-                  hint: Text(
-                    'Choose duration',
-                    style:
-                        TextStyle(color: Colors.grey[400]), // Hint text color
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    hint: Text(
+                      'Choose duration',
+                      style: TextStyle(color: Colors.grey[400]),
+                    ),
+                    value: selectedDuration,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedDuration = newValue;
+                        _saveSelectedFilters();
+                      });
+                    },
+                    icon: selectedDuration != null
+                        ? GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedDuration = null;
+                                _saveSelectedFilters();
+                              });
+                            },
+                            child:
+                                Icon(Icons.close, color: Colors.blue, size: 18),
+                          )
+                        : Icon(Icons.arrow_drop_down, color: Colors.grey),
+                    selectedItemBuilder: (BuildContext context) {
+                      return <String>[
+                        '1 Month',
+                        '2 Months',
+                        '3 Months',
+                        '4 Months',
+                        '6 Months',
+                        '12 Months',
+                        '24 Months',
+                        '36 Months'
+                      ].map<Widget>((String item) {
+                        return Container(
+                          alignment: Alignment.centerLeft,
+                          constraints: const BoxConstraints(minWidth: 100),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              item,
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 14),
+                            ),
+                          ),
+                        );
+                      }).toList();
+                    },
+                    items: <String>[
+                      '1 Month',
+                      '2 Months',
+                      '3 Months',
+                      '4 Months',
+                      '6 Months',
+                      '12 Months',
+                      '24 Months',
+                      '36 Months'
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
                   ),
-                  value: selectedDuration,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedDuration = newValue;
-                      _saveSelectedFilters();
-                    });
-                  },
-                  items: <String>[
-                    '1 Month',
-                    '2 Months',
-                    '3 Months',
-                    '4 Months',
-                    '6 Months',
-                    '12 Months',
-                    '24 Months',
-                    '36 Months'
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
                 ),
               ),
-              if (selectedDuration != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(selectedDuration!),
-                        IconButton(
-                          icon: const Icon(Icons.close, color: Colors.red),
-                          onPressed: () {
-                            setState(() {
-                              selectedDuration = null;
-                              _saveSelectedFilters();
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _applyFilters,
-                child: const Text('Apply Filters'),
-              ),
             ],
           ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: InkWell(
+                  onTap: _clearAllFilters,
+                  child: Center(
+                    child: Text(
+                      'Clear all',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: InkWell(
+                  onTap: _applyFilters,
+                  child: Center(
+                    child: Text(
+                      'Apply now',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
