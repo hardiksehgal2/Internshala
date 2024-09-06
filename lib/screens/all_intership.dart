@@ -407,7 +407,7 @@ class InternshipCard extends StatelessWidget {
                   children: [
                     TextButton(
                       onPressed: () {},
-                      child: "View details".text.lg.blue400.make(),
+                      child: "View details".text.lg.blue300.make(),
                     ),
                     const SizedBox(width: 6),
                     Container(
